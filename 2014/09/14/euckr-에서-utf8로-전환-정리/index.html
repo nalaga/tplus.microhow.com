@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>euc_kr 에서 utf-8로 전환 정리 | 티플러스 &#34;비공식&#34; 블로그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="초기 조건은 mysql 3.23.55 또는 mysql 4.0.24 버전이었고  옮겨 가는 환경은 utf-8 , mysql 4.1.x,mysql 5.0.x 버전입니다.">
+<meta name="keywords" content="티플러스">
+<meta property="og:type" content="article">
+<meta property="og:title" content="euc_kr 에서 utf-8로 전환 정리">
+<meta property="og:url" content="https://tplus.microhow.com/2014/09/14/euckr-에서-utf8로-전환-정리/index.html">
+<meta property="og:site_name" content="티플러스 &quot;비공식&quot; 블로그">
+<meta property="og:description" content="초기 조건은 mysql 3.23.55 또는 mysql 4.0.24 버전이었고  옮겨 가는 환경은 utf-8 , mysql 4.1.x,mysql 5.0.x 버전입니다.">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="http://img.linkprice.com/files/stlink/tplusmall/0043">
+<meta property="og:image" content="http://img.linkprice.com/files/glink/linkprice/20150417/55308d10ecdb6_412_29.gif">
+<meta property="og:updated_time" content="2018-02-14T19:04:49.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="euc_kr 에서 utf-8로 전환 정리">
+<meta name="twitter:description" content="초기 조건은 mysql 3.23.55 또는 mysql 4.0.24 버전이었고  옮겨 가는 환경은 utf-8 , mysql 4.1.x,mysql 5.0.x 버전입니다.">
+<meta name="twitter:image" content="http://img.linkprice.com/files/stlink/tplusmall/0043">
+  
+    <link rel="alternate" href="/rss.xml" title="티플러스 &#34;비공식&#34; 블로그" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+
+  
+    <link rel="amphtml" href="https://tplus.microhow.com/2014/09/14/euckr-에서-utf8로-전환-정리//amp/index.html">
+  
+
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">티플러스 &#34;비공식&#34; 블로그</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">최저가 알뜰폰 판매</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/rss.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="검색"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://tplus.microhow.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-euckr-에서-utf8로-전환-정리" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/14/euckr-에서-utf8로-전환-정리/" class="article-date">
+  <time datetime="2014-09-13T15:00:00.000Z" itemprop="datePublished">2014-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      euc_kr 에서 utf-8로 전환 정리
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>초기 조건은 mysql 3.23.55 또는 mysql 4.0.24 버전이었고</p>
+<p></p>
+<p>옮겨 가는 환경은 utf-8 , mysql 4.1.x,mysql 5.0.x 버전입니다.</p>
+<p></p>
+<p>1. 편집기</p>
+<p></p>
+<p>편집기는 아무거나 쓰지 마시고 저는 에디트플러스 2.31 을 사용하였습니다.</p>
+<p></p>
+<p>euc_kr 로 된 파일을 utf-8로 저장시 utf 식별자가 따라 붙기 때문에 메모장 등에서 파일을 저장하게 되면 화면 상단 또는 테이블과 테이블 사이에 빈공백이 생깁니다.</p>
+<p></p>
+<p>이와 같은 것을 BOM 이라고 하는데요. 이를 제거해 주기 위해서는 특수한 프로그램이 필요한 것입니다. 이클립스 등에서도 이를 제거해 줄 수 있는 기능이 있다고 하더군요.</p>
+<p></p>
+<p>에디티플러스에서는 2.31 버전에서 보면</p>
+<p></p>
+<p>도구 > 기본설정 > 파일 > 왼쪽화면에서 UTF-8 식별기호 설정란이 있습니다.</p>
+<p></p>
+<p>여기서 항상식별기호 제거를 선택하시면 됩니다.</p>
+<p></p>
+<p>2. jsp 페이지 수정</p>
+<p></p>
+<p><%@ page="" language="java" contenttype="text/html;charset=utf-8" %=""></%@></p>
+<p></p>
+<p>화면 상단에 이와 같이 캐릭터셋을 지정해 주시면 되고요.</p>
+<p></p>
+<p>저장시 utf-8로 저장하시면 됩니다.</p>
+<p></p>
+<p>html 파일에서도 제대로 화면을 출력시켜 주기 위해서는 캐릭터셋을 지정해 주어야 하는 경우가 있더군요.</p>
+<p></p>
+<p>3. css, js 파일</p>
+<p></p>
+<p>이러한 파일은 그냥 utf-8 로 저장하시면 됩니다.</p>
+<p></p>
+<p>4. 한글파일 다운로드</p>
+<p></p>
+<p>파일이름을 넘겨주는 페이지는 utf-8 로 인코딩이 되어 있겠지만</p>
+<p></p>
+<p>파일이름을 받는 페이지는 반드시 utf-8 이 아닌 다른 캐릭터셋으로 지정해야 합니다.</p>
+<p></p>
+<p>이 때 utf-8 페이지에서 utf-8 이 아닌 페이지로 파일이름을 넘겨주게 되면</p>
+<p></p>
+<p>한글파일은 모두 깨지더군요.</p>
+<p></p>
+<p>그래서 파일이름을 직접 넘겨 주지 말고 테이블에 파일이름을 저장한 후에 파일번호만 넘겨 줍니다. 그러면 다운로드 페이지에서는 그 파일번호를 읽어와서</p>
+<p></p>
+<p>파일이름을 디비에서 가져오게 됩니다.</p>
+<p></p>
+<p>아래는 다른 분이 올려주신 소스를 약간 수정한 것입니다.</p>
+<p></p>
+<p><%@ page="" contenttype="text/html; charset=8859_1" import="java.io.*" %=""></%@></p>
+<p></p>
+<p><jsp:usebean id="dbs" class="kr.pe.haedongmu.util.DBSql" scope="session"></jsp:usebean></p>
+<p></p>
+<p><%< p="">
+<p></p>
+<p>String b_fidx = request.getParameter("b_fidx");</p>
+<p></p>
+<p>String filename = dbs.getSelectData("select b_fileinfo from bbs_finfo where b_fidx="+b_fidx); //파일 이름을 받는다.</p>
+<p></p>
+<p>String path = getServletContext().getRealPath("/");</p>
+<p></p>
+<p>String other_path="upload/board/"; // 경로 선택 가능하도록 변경. 오답노트 다운로드시와 게시판 다운로드시</p>
+<p></p>
+<p>if(request.getParameter("pathflag") != null){</p>
+<p></p>
+<p>other_path="upload/";</p>
+<p></p>
+<p>}</p>
+<p></p>
+<p>File file = new File(path+other_path+"/"+filename); // 절대경로입니다.</p>
+<p></p>
+<p>response.setContentType("application/octet-stream");</p>
+<p></p>
+<p>String Agent=request.getHeader("USER-AGENT");</p>
+<p></p>
+<p>if(Agent.indexOf("MSIE")>=0){</p>
+<p></p>
+<p>int i=Agent.indexOf('M',2);//두번째 'M'자가 있는 위치</p>
+<p></p>
+<p>String IEV=Agent.substring(i+5,i+8);</p>
+<p></p>
+<p>if(IEV.equalsIgnoreCase("5.5")){</p>
+<p></p>
+<p>response.setHeader("Content-Disposition", "filename="+new String(filename.getBytes("euc-kr"),"8859_1"));</p>
+<p></p>
+<p>}else{</p>
+<p></p>
+<p>response.setHeader("Content-Disposition", "attachment;filename="+new String(filename.getBytes("euc-kr"),"8859_1"));</p>
+<p></p>
+<p>}</p>
+<p></p>
+<p>}else{</p>
+<p></p>
+<p>response.setHeader("Content-Disposition", "attachment;filename="+new String(filename.getBytes("euc-kr"),"8859_1"));</p>
+<p></p>
+<p>}</p>
+<p></p>
+<p>byte b[] = new byte[5 * 1024 * 1024]; //5M byte까지 업로드가 가능하므로 크기를 이렇게 잡아주었음.</p>
+<p></p>
+<p>if (file.isFile()){</p>
+<p></p>
+<p>try {</p>
+<p></p>
+<p>BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file));</p>
+<p></p>
+<p>BufferedOutputStream outs = new BufferedOutputStream(response.getOutputStream());</p>
+<p></p>
+<p>int read = 0;</p>
+<p></p>
+<p>while ((read = fin.read(b)) != -1){</p>
+<p></p>
+<p>outs.write(b,0,read);</p>
+<p></p>
+<p>}</p>
+<p></p>
+<p>outs.flush();</p>
+<p></p>
+<p>outs.close();</p>
+<p></p>
+<p>fin.close();</p>
+<p></p>
+<p>}catch(Exception e){}</p>
+<p></p>
+<p>}</p>
+<p></p>
+<p>%></p>
+<p></p>
+<p>5. 한글파일 업로드</p>
+<p></p>
+<p>업로드시에는 캐릭터셋을 utf-8로만 맞추어 주면 그냥 되더군요.</p>
+<p></p>
+<p><%@ page="" language="java" contenttype="text/html;charset=utf-8" %=""></%@></p>
+<p></p>
+<p><%@ page="" import="com.oreilly.servlet.MultipartRequest,com.oreilly.servlet.multipart.DefaultFileRenamePolicy,java.util.*" %=""></%@></p>
+<p></p>
+<p>MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit,"utf-8",</p>
+<p></p>
+<p>new DefaultFileRenamePolicy());</p>
+<p></p>
+<p>이렇게만 지정해 주시면 됩니다.</p>
+<p></p>
+<p>6. 마지막으로 가장 중요한 DB 세팅입니다.</p>
+<p></p>
+<p>1) 일단 mysql 4.1 이전 버전의 DB 에서 아무런 옵션도 주시 않고 덤프 받습니다.</p>
+<p></p>
+<p>mysqldump -hlocalhost -u아이디 -p비밀번호 디비이름 > 절대경로/파일이름.sql</p>
+<p></p>
+<p>2) 이 파일을 울트라에디트나 에디트플러스 등 대용량 파일을 편집할 수 있는 프로그램을 이용해서 엽니다.</p>
+<p></p>
+<p>-- MySQL dump 9.11</p>
+<p></p>
+<p>--</p>
+<p></p>
+<p>-- Host: localhost Database: 디비명</p>
+<p></p>
+<p>-- ------------------------------------------------------</p>
+<p></p>
+<p>-- Server version 4.0.24_Debian-10sarge2-log</p>
+<p></p>
+<p>화면 맨위쪽을 보시면 위와 같이 되어 있습니다. 여기에 다음 세 줄을 덧붙입니다.</p>
+<p></p>
+<p>SET character_set_client = 'euckr';</p>
+<p></p>
+<p>SET character_set_results = 'euckr';</p>
+<p></p>
+<p>SET collation_connection = @@collation_database;</p>
+<p></p>
+<p>-- MySQL dump 9.11</p>
+<p></p>
+<p>--</p>
+<p></p>
+<p>-- Host: localhost Database: 디비명</p>
+<p></p>
+<p>-- ------------------------------------------------------</p>
+<p></p>
+<p>-- Server version 4.0.24_Debian-10sarge2-log</p>
+<p></p>
+<p>그리고 나서 저장을 합니다.</p>
+<p></p>
+<p>3) mysql 4.1.x 버전을 설치하고 나서 my.ini 파일을 엽니다.</p>
+<p></p>
+<p>이 파일은 Windows 폴더 안에 있습니다.</p>
+<p></p>
+<p>맨 아랫쪽에 다음줄을 추가해 줍니다.</p>
+<p></p>
+<p>default-character-set=utf8</p>
+<p></p>
+<p>[mysqld]</p>
+<p></p>
+<p>init_connect=SET collation_connection = utf8_general_ci</p>
+<p></p>
+<p>init_connect=SET NAMES utf8</p>
+<p></p>
+<p>default-character-set=utf8</p>
+<p></p>
+<p>character-set-server=utf8</p>
+<p></p>
+<p>collation-server=utf8_general_ci</p>
+<p></p>
+<p>[mysql]</p>
+<p></p>
+<p>default-character-set=utf8</p>
+<p></p>
+<p>그리고 나서 mysql 을 재시동합니다.</p>
+<p></p>
+<p>mysql 5.0.x 버전부터는 캐릭터셋을 설치시 지정해 줄 수 있습니다.</p>
+<p></p>
+<p>거의 마지막 설치단계에 캐릭터셋을 지정해 주는 단계가 있습니다.</p>
+<p></p>
+<p>이 때 utf-8 로 지정해 주면 됩니다.</p>
+<p></p>
+<p>4) 이제 데이터베이스를 아래와 같이 생성합니다.</p>
+<p></p>
+<p>CREATE DATABASE 디비명 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;</p>
+<p></p>
+<p>5) 그런 후에 덤프 받은 파일을 리스토어 합니다.</p>
+<p></p>
+<p>mysql -hlocalhost -u아이디 -p패스워드 디비명 < 절대경로/파일이름.sql</p>
+<p></p>
+<p>7. get으로 넘길 때 한글 검색 처리</p>
+<p></p>
+<p>넘기는 페이지에서</p>
+<p></p>
+<p>맨 위쪽에</p>
+<p></p>
+<p><%@ page="" import="java.net.*" %=""> 을 추가하고</%@></p>
+<p></p>
+<p>파라미터는 아래와 같이 처리합니다.</p>
+<p></p>
+<p>searchstring = URLEncoder.encode(searchstring,"UTF-8");</p>
+<p></p>
+<p>받는 페이지의 처리는 get 이든, post 이든 동일하게 처리해 주시면 됩니다.</p>
+<p></p>
+<p>str = new String(str.getBytes("ISO-8859-1"), "utf-8");</p>
+<p></p>
+<p>이상으로 euc_kr 에서 utf-8 환경으로 옮겨가는 전 과정을 서술하였습니다.</p><br><p>Source from http://minooz.tistory.com/16</p><p>this post is collect by CC BY license</p><hr><p style="width:100%;"><a href="http://click.linkprice.com/click.php?m=tplusmall&a=A100588577&l=9999&l_cd1=3&l_cd2=0&tu=https%3A%2F%2Fwww.tplusmall.co.kr%2Ftplus%2Fprize.jsp" target="_blank" rel="external nofollow noopener noreferrer"><img src="http://img.linkprice.com/files/stlink/tplusmall/0043" alt="티플러스" class="nofancybox"></a></p><p style="font-size:20px;font-weight:bold;text-align:center;"><a href="http://click.linkprice.com/click.php?m=tplusmall&a=A100588577&l=9999&l_cd1=3&l_cd2=0&tu=https%3A%2F%2Fwww.tplusmall.co.kr%2Ftplus%2Fprize.jsp" target="_blank" rel="external nofollow noopener noreferrer">티플러스 바로가기</a></p><p><img src="http://img.linkprice.com/files/glink/linkprice/20150417/55308d10ecdb6_412_29.gif" width="412" height="29" class="nofancybox"></p></%<></p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://tplus.microhow.com/2014/09/14/euckr-에서-utf8로-전환-정리/" data-id="cjdng79kx0001wx3wfvrthb4c" class="article-share-link">공유</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/티플러스/">티플러스</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/03/09/KT용-하나-1Q-혜자카드/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">최신</strong>
+      <div class="article-nav-title">
+        
+          KT용 하나 1Q 혜자카드
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/07/04/통신사-개통-조회-방법-핸드폰-개통-조회-방법/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">이전</strong>
+      <div class="article-nav-title">통신사 개통 조회 방법, 핸드폰 개통 조회 방법</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">최근 포스트</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/13/전북대-술집--돌아온-텐구-양옥집-난리부르스-등/">전북대 술집 - 돌아온 텐구, 양옥집, 난리부르스 등</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/25/국내-기업-2000개의-광고-카피-및-슬로건-모음-7탄--화장품세제-편/">국내 기업 2,000개의 광고 카피 및 슬로건 모음 7탄 - 화장품/세제 편</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/16/아남인베스텔-아파트-전세물건-부족에-그럼-오피스텔-전세라도/">아남인베스텔 아파트 전세물건 부족에 “그럼 오피스텔 전세라도</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/09/KT용-하나-1Q-혜자카드/">KT용 하나 1Q 혜자카드</a>
+          </li>
+        
+          <li>
+            <a href="/2014/09/14/euckr-에서-utf8로-전환-정리/">euc_kr 에서 utf-8로 전환 정리</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 tplus_admin<br>
+      Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
